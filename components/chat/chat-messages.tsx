@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { pusherClient } from "@/lib/pusher/pusherClient";
 
-interface Message {
+export interface Message {
   id: string;
   content: string;
   userId: string;

@@ -1,14 +1,9 @@
 import { Navbar } from '@/components/layout/navbar';
 import { ChatInput } from '@/components/chat/chat-input';
-import { ChatMessages } from '@/components/chat/chat-messages';
-import { config } from "@/config";
+import { ChatMessages, Message } from '@/components/chat/chat-messages';
 
 export default async function ChatPage() {
-  const res = await fetch(`${config.api_url}/api/messages`);
-  console.info('res', res);
-  const messages = await res.json();
-  console.info('res', messages);
-
+  const messages: Message[] = []
   // In a real app, this would come from authentication
   const currentUser = {
     id: '1',
