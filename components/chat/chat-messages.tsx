@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { pusherClient } from "@/lib/pusher/pusherClient";
+import { withErrorBoundary } from "react-error-boundary";
 
 export interface Message {
   id: string;
@@ -17,7 +18,8 @@ interface ChatMessagesProps {
   currentUserId: string;
 }
 
-export function ChatMessages({ initialMessages, currentUserId }: ChatMessagesProps) {
+export const ChatMessages = withErrorBoundary(
+  ({ initialMessages, currentUserId }: ChatMessagesProps) => {
   const messagesRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
 
@@ -66,4 +68,10 @@ export function ChatMessages({ initialMessages, currentUserId }: ChatMessagesPro
       ))}
     </div>
   );
-}
+  }, {
+    fallback: <>error</>,
+    onError: (error, info) => {
+      console.error(error, { ...info });
+    }
+  }
+)
