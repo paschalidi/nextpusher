@@ -1,23 +1,23 @@
 'use server'
 
-import { config } from "@/config";
+import { pusherServer } from "@/lib/pusher";
 
 export const sendIt = async (userId: string, username: string, content: string) => {
-  console.error(`@@@@@${config.api_url}/api/messages`)
-  const res = await fetch(`${config.api_url}/api/messages`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
+  try {
+    const message = {
+      id: Date.now().toString(),
       content,
       userId,
       username,
-    }),
-  });
+      createdAt: new Date().toISOString(),
+    };
 
-  if (!res.ok) {
+    // Trigger Pusher event directly
+    await pusherServer.trigger('chat', 'new-message', message);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending message:', error);
     throw new Error('Failed to send message');
   }
 }
