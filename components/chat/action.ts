@@ -3,7 +3,7 @@
 import { config } from "@/config";
 
 export const sendIt = async (userId: string, username: string, content: string) => {
-  console.info(`@@@@@${config.api_url}/api/messages`)
+  console.error(`@@@@@${config.api_url}/api/messages`)
   const res = await fetch(`${config.api_url}/api/messages`, {
     method: 'POST',
     headers: {
