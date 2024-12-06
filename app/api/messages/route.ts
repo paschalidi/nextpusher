@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { pusherServer } from '@/lib/pusher';
+
 export const dynamic = 'force-dynamic';
 
 let messages: any[] = [];
@@ -15,10 +16,14 @@ export async function POST(req: Request) {
       createdAt: new Date().toISOString(),
     };
 
-    messages.push(message);
-    await pusherServer.trigger('chat', 'new-message', message);
+    try {
+      await pusherServer.trigger('chat', 'new-message', message);
+    } catch (pusherError) {
+      console.error('Pusher error:', pusherError);
+      return new NextResponse('Pusher Error', { status: 500 });
+    }
 
-    return NextResponse.json(message);
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error('[MESSAGES_POST]', error);
     return new NextResponse('Internal Error', { status: 500 });
